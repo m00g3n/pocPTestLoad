@@ -1,0 +1,19 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  annotations:
+    "helm.sh/hook-delete-policy": before-hook-creation
+  name: {{ template "perfass.name" . }}
+  namespace: kyma-system
+  labels:
+    app: {{ template "perfass.fullname" . }}
+    chart: {{ template "perfass.chart" . }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ template "perfass.name" . }}
+  namespace: kyma-system
+subjects:
+- kind: ServiceAccount
+  name: {{ template "perfass.name" . }}
+  namespace: kyma-system

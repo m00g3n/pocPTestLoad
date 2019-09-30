@@ -1,0 +1,15 @@
+image:
+  repository: eu.gcr.io/kyma-project/test-infra/alpine-kubectl
+  tag: v20190325-ff66a3a
+  pullPolicy: IfNotPresent
+
+test:
+  id: perfass
+  assetNumber: 10
+  assetSource:
+    url: https://github.com/kyma-project/kyma/archive/master.zip
+    filter: /docs/service-catalog/docs/kyma-0.8.1.zip
+    mode: package
+  bucket:
+    name: perfass-bucket
+    region: us-east-1

@@ -1,0 +1,11 @@
+#/bin/sh
+
+set -eu
+
+TEST_ID=$1	    # test identifier
+BKT_NAME=$2		# bucket name
+BKT_REGION=$3	# bucket region
+
+SCRIPT="s/__TEST_ID__/$TEST_ID/g;s/__BKT_NAME__/$BKT_NAME/g;s/__BKT_REGION__/$BKT_REGION/g;"
+
+cat /templates/bucket | sed $SCRIPT | kubectl -n kyma-system apply -f -

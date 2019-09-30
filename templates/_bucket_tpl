@@ -1,0 +1,10 @@
+apiVersion: assetstore.kyma-project.io/v1alpha2
+kind: Bucket
+metadata:
+  name: __BKT_NAME__
+  namespace: kyma-system
+  labels:
+    testID: __TEST_ID__
+spec:
+  region: __BKT_REGION__
+  policy: writeonly

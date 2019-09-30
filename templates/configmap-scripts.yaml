@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  annotations:
+    "helm.sh/hook-delete-timeout": "0"
+    "helm.sh/hook-delete-policy": hook-failed,hook-succeeded,before-hook-creation
+  name: {{ template "perfass.fullname" . }}-scripts
+  namespace: kyma-system
+  labels:
+    app: {{ template "perfass.name" . }}
+    chart: {{ template "perfass.chart" . }}
+data:
+  start: |-
+{{ include (print $.Template.BasePath "/_start") . | indent 4 }}
+  generate_asset: |-
+{{ include (print $.Template.BasePath "/_generate_asset") . | indent 4 }}
+  generate_bucket: |-
+{{ include (print $.Template.BasePath "/_generate_bucket") . | indent 4 }}
+  wait_test_finish: |-
+{{ include (print $.Template.BasePath "/_wait_test_finish") . | indent 4 }}

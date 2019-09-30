@@ -1,0 +1,15 @@
+kind: Asset
+apiVersion: assetstore.kyma-project.io/v1alpha2
+metadata:
+  name: __ASS_NAME__
+  namespace: kyma-system
+  labels:
+    controller-tools.k8s.io: 1.0.0
+    testID: __TEST_ID__
+spec:
+  bucketRef:
+    name: __ASS_BKT_REF_NAME__
+  source:
+    url: __ASS_SRC_URL__
+    filter: __ASS_SRC_FILTER__
+    mode: __ASS_SRC_MODE__

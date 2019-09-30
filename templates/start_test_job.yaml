@@ -1,0 +1,46 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-delete-policy": hook-succeeded
+    "helm.sh/hook-delete-timeout": "0"
+    "helm.sh/hook-weight": "3"
+  name: {{ template "perfass.fullname" . }}-make-bucket-job
+  namespace: kyma-system
+  labels:
+    app: {{ template "perfass.name" . }}
+    chart: {{ template "perfass.chart" . }}
+spec:
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"        
+      labels:
+        app: {{ template "perfass.name" . }}
+    spec:
+      backoffLimit: 1
+      restartPolicy: Never
+      serviceAccountName: {{ template "perfass.name" . }}
+      volumes:
+        - name: perfass-scripts
+          projected:
+            sources:
+            - configMap:
+                name: {{ template "perfass.fullname" . }}-scripts
+        - name: perfass-templates
+          projected:
+            sources:
+            - configMap:
+                name: {{ template "perfass.fullname" . }}-templates
+      containers:
+      - name: perfass-scripts-initialize-job
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["/bin/sh", "/scripts/start"]
+        volumeMounts:
+          - name: perfass-scripts
+            mountPath: /scripts
+          - name: perfass-templates
+            mountPath: /templates
+        

@@ -1,0 +1,16 @@
+#/bin/sh
+# this script generates asset;
+
+set -eu
+
+TEST_ID=$1		# test identifier
+ASS_SRC_URL=$2		# asset source URL
+ASS_SRC_FILTER=$3	# asset source filter
+ASS_SRC_MODE=$4		# asset source mode
+ASS_BKT_REF_NAME=$5	# asset bucket reference name
+
+ASS_NAME=$(cat /proc/sys/kernel/random/uuid | tr '[:upper:]' '[:lower:]')
+
+SCRIPT="s/__ASS_NAME__/$ASS_NAME/g;s/__TEST_ID__/$TEST_ID/g;s~__ASS_SRC_URL__~$ASS_SRC_URL~g;s~__ASS_SRC_FILTER__~$ASS_SRC_FILTER~g;s/__ASS_SRC_MODE__/$ASS_SRC_MODE/g;s/__ASS_BKT_REF_NAME__/$ASS_BKT_REF_NAME/g;"
+
+cat /templates/asset | sed $SCRIPT

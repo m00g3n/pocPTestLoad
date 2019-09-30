@@ -1,0 +1,23 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: hookyma.poc.rule
+  namespace: kyma-system
+  labels:
+    app: hookyma
+    prometheus: monitoring
+    release: monitoring
+    role: alert-rules
+spec:
+  groups:
+    - name: hookyma
+      rules:
+        - alert: AllertPOC
+          expr: rate(workqueue_queue_duration_seconds_sum{service="assetstore-asset-store-controller-manager", name="asset"}[1m]) / rate(workqueue_queue_duration_seconds_count{service="assetstore-asset-store-controller-manager", name="asset"}[1m]) > 20
+          for: 1m
+          labels:
+            severity: critical
+            app: hookyma
+          annotations:
+            description: "demo"
+            summary: "workqueue latency is too big"

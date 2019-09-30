@@ -1,0 +1,36 @@
+#!/bin/sh
+set -eu;
+TEST_ID={{ .Values.test.id }}
+ASS_NUMBER={{ .Values.test.assetNumber }}
+ASS_SRC_URL={{ .Values.test.assetSource.url }}
+ASS_SRC_FILTER={{ .Values.test.assetSource.filter }}
+ASS_SRC_MODE={{ .Values.test.assetSource.mode }}
+BKT_NAME={{ .Values.test.bucket.name }}
+BKT_REGION={{ .Values.test.bucket.region }}
+
+function cleanup {
+	echo 'cleaning up test data'
+	sh /scripts/wait_test_finish $ASS_NUMBER $TEST_ID
+	kubectl -n kyma-system delete asset -l="testID=${TEST_ID}"
+	kubectl -n kyma-system delete bucket -l="testID=${TEST_ID}"
+	echo 'cleaning up done'
+}
+
+function initialization {
+	echo 'initializing test data'
+	sh /scripts/generate_bucket $TEST_ID $BKT_NAME $BKT_REGION
+	for i in $(seq 1 $ASS_NUMBER)
+	do
+	    sh /scripts/generate_asset \
+		    $TEST_ID \
+		    $ASS_SRC_URL \
+		    $ASS_SRC_FILTER \
+		    $ASS_SRC_MODE \
+		    $BKT_NAME \
+	    | kubectl -n kyma-system apply -f -
+	done
+	echo 'initialization done'
+}
+
+initialization
+cleanup

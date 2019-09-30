@@ -1,0 +1,13 @@
+#!/bin/bash
+set -eu
+
+ASSET_COUNT=$1
+TEST_ID=$2
+
+COUNT=0
+#echo "waiting all assets are Ready"
+while [  "${COUNT}" -ne "${ASSET_COUNT}" ]; do
+    COUNT=$(kubectl -n kyma-system get asset -l="testID=$TEST_ID" -o jsonpath='{.items..status.phase}' | grep -o 'Ready' | wc -l | tr -d ' ')
+    echo "${COUNT}"/"${ASSET_COUNT}"
+    sleep 1
+done
