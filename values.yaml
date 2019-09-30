@@ -5,9 +5,9 @@ image:
 
 test:
   id: perfass
-  assetNumber: 10
+  assetNumber: 50
   assetSource:
-    url: https://github.com/kyma-project/kyma/archive/master.zip
+    url: https://minio.lysy-testuje.wookiee.kyma.online/test/kyma-master.zip
     filter: /docs/service-catalog/docs/kyma-0.8.1.zip
     mode: package
   bucket:
